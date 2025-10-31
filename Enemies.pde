@@ -1,34 +1,35 @@
-class Enemies{
-  float x, y;
+class Enemy{
+  PVector pos;
   float speed;
   int health;
-  color c; 
-  PImage enem; 
+  PImage sprite;
+  int currentTarget = 0;
   
   
-  
-void Enemy(float startX, float startY, float spd, int hp, color col){
-   x = startX;
-   y = startY;
+Enemy(float x, float y, float spd, int hp, PImage s){
+   pos = new PVector(x, y);
    speed = spd;
    health = hp;
-   c = col;
-
+   sprite = s;
 }
 
-void update(){
-  x += speed;
+void update(ArrayList<PVector> path){
+  if(currentTarget < path.size()){                //counts for each path
+    PVector target = path.get(currentTarget);     //makes each path point the target
+    PVector direction = PVector.sub(target, pos); //gets the distance from the current position of the enemy to the position of the next path point
+    
+    if(direction.mag() < 5){                      //if the length of the enemy to the position of the point is less than 5. Consider collided
+     currentTarget++;                             //changes to next point
+    }else{
+      direction.normalize(); 
+      direction.mult(speed);                      //How fast the enemy should get to the next point
+      pos.add(direction);                         //Direction to next point
+    }
+  }
 }
-
-void setup(){
-  enem = loadImage("");
-  enem.resize(0, 0);
-  
-}
-
 
 void display() {
-     image(enem,0, 0);
+     image(enemySprite, pos.x, pos.y);
   }
 
   // Damage the enemy
@@ -40,12 +41,11 @@ void display() {
   boolean isDead() {
     return health <= 0;
   }
-
-
-
-
-
-
-
+  
+  boolean reachedEnd(ArrayList<PVector> path){
+    return currentTarget >= path.size();
+  }
+  
+  //TODO Add health Box
 
 }
