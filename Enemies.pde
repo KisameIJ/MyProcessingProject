@@ -1,16 +1,19 @@
 class Enemy{
+  PShape healthBar;
+  PImage sprite;
   PVector pos;
   float speed;
   int health;
-  PImage sprite;
   int currentTarget = 0;
-  
-  
+ 
 Enemy(float x, float y, float spd, int hp, PImage s){
+   
    pos = new PVector(x, y);
    speed = spd;
-   health = hp;
    sprite = s;
+   health = hp;
+   
+   fill(0, 100, 0);
 }
 
 void update(ArrayList<PVector> path){
@@ -30,6 +33,7 @@ void update(ArrayList<PVector> path){
 
 void display() {
      image(enemySprite, pos.x, pos.y);
+
   }
 
   // Damage the enemy
@@ -39,13 +43,10 @@ void display() {
 
   // Check if dead
   boolean isDead() {
-    return health <= 0;
+    if(this.pos.x > 1100 || health <= 0){
+     return true ; 
+    }else{
+     return false; 
+    }
   }
-  
-  boolean reachedEnd(ArrayList<PVector> path){
-    return currentTarget >= path.size();
-  }
-  
-  //TODO Add health Box
-
 }
